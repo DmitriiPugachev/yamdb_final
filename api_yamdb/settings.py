@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", default="default_value")
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", default="localhost").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", default="localhost").split()
 AUTH_USER_MODEL = "reviews.User"
 
 
