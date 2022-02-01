@@ -112,11 +112,11 @@ sudo
 ```
 
 ### Links
-[redoc](http://dmitrii-pugachev.tk/redoc/)
+[redoc](http://localhost/redoc/) this link is for local usage
 
-[admin](http://dmitrii-pugachev.tk/admin/)
+[admin](http://localhost/admin/)  this link is for local usage
 
-[API](http://dmitrii-pugachev.tk/)
+[API](http://localhost/)  this link is for local usage
 
 ### Author
 Dmitrii Pugachev
