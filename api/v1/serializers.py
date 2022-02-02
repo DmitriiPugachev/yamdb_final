@@ -1,3 +1,6 @@
+"""API v.1 serializers."""
+
+
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
@@ -12,6 +15,7 @@ User = get_user_model()
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    """Reviews.Review model serializer."""
     author = SlugRelatedField(slug_field="username", read_only=True)
 
     class Meta:
@@ -20,6 +24,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only_fields = ("author", "title")
 
     def validate(self, data):
+        """Validate a specific review does not exists."""
         title = self.context["view"].kwargs.get("titles_id")
         request = self.context.get("request")
         if (
@@ -35,6 +40,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """Reviews.Comment model serializer."""
     author = SlugRelatedField(slug_field="username", read_only=True)
 
     class Meta:
@@ -44,6 +50,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    """Reviews.User model custom serializer."""
     class Meta:
         fields = (
             "username",
@@ -57,6 +64,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserMeSerializer(serializers.ModelSerializer):
+    """Reviews.User model serializer for an own account."""
     role = serializers.CharField(read_only=True)
 
     class Meta:
@@ -72,11 +80,13 @@ class UserMeSerializer(serializers.ModelSerializer):
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    """Reviews.User model serializer for a sing up action."""
     class Meta:
         fields = ("username", "email")
         model = User
 
     def validate(self, data):
+        """Validate username is not equal me."""
         if data["username"] == "me":
             raise validators.ValidationError("You can not use this username.")
 
@@ -84,6 +94,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class TokenCreateSerializer(serializers.ModelSerializer):
+    """Reviews.User model serializer for a token creation."""
     confirmation_code = serializers.CharField(source="password")
 
     class Meta:
@@ -91,6 +102,7 @@ class TokenCreateSerializer(serializers.ModelSerializer):
         model = User
 
     def validate(self, data):
+        """Validate confirmation code is equal to user's password."""
         current_user = get_object_or_404(User, username=data["username"])
         if data["confirmation_code"] != current_user.password:
             raise validators.ValidationError(
@@ -99,6 +111,7 @@ class TokenCreateSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Reviews.Category model serializer."""
     class Meta:
         fields = ("name", "slug")
         model = Category
@@ -107,6 +120,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GenreSerializer(serializers.ModelSerializer):
+    """Reviews.Genre model serializer."""
     class Meta:
         fields = ("name", "slug")
         model = Genre
@@ -115,18 +129,21 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class RepresentCategory(serializers.SlugRelatedField):
+    """Represented category field."""
     def to_representation(self, obj):
         serializer = CategorySerializer(obj)
         return serializer.data
 
 
 class RepresentGenre(serializers.SlugRelatedField):
+    """Represented genre field."""
     def to_representation(self, obj):
         serializer = GenreSerializer(obj)
         return serializer.data
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    """Reviews.Title model serializer."""
     rating = serializers.SerializerMethodField()
 
     category = RepresentCategory(
@@ -140,12 +157,14 @@ class TitleSerializer(serializers.ModelSerializer):
     )
 
     def get_rating(self, obj):
+        """Method gets data for a rating field."""
         rating = Review.objects.filter(title=obj.id).aggregate(Avg("score"))
         if rating["score__avg"] is None:
             return None
         return rating["score__avg"]
 
     def validate_year(self, value):
+        """Validate year is in range from 1000 to a current."""
         now_year = datetime.now().year
         if value in range(1000, now_year + 1):
             return value

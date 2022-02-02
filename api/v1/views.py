@@ -1,3 +1,6 @@
+"""API v.1 views."""
+
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -26,10 +29,12 @@ class DestroyListCreateViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
+    """Custom ViewSet for GET, POST and DELETE methods."""
     pass
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Reviews.Review model ViewSet."""
     permission_classes = [
         CustomIsAuthenticated
         & (IsOwner | IsModerator | IsAdmin | IsSuperUser)
@@ -39,16 +44,19 @@ class ReviewViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
 
     def perform_create(self, serializer):
+        """Redefinition perform_create method."""
         title = get_object_or_404(Title, pk=self.kwargs.get("titles_id"))
         return serializer.save(author=self.request.user, title_id=title.id)
 
     def get_queryset(self):
+        """Redefinition get_queryset method."""
         title_id = self.kwargs.get("titles_id")
         title = get_object_or_404(Title, id=title_id)
         return title.reviews_title.all()
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Reviews.Comment model ViewSet."""
     permission_classes = [
         CustomIsAuthenticated
         & (IsOwner | IsModerator | IsAdmin | IsSuperUser)
@@ -58,16 +66,19 @@ class CommentViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
 
     def perform_create(self, serializer):
+        """Redefinition perform_create method."""
         review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
         return serializer.save(author=self.request.user, review=review)
 
     def get_queryset(self):
+        """Redefinition get_queryset method."""
         title = get_object_or_404(Title, id=self.kwargs.get("title_id"))
         review = title.reviews_title.get(id=self.kwargs.get("review_id"))
         return review.comments.all()
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    """Reviews.Title model ViewSet"""
     permission_classes = [
         CustomIsAuthenticated & (IsAdmin | IsSuperUser) | IsSafeMethod
     ]
@@ -79,6 +90,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(DestroyListCreateViewSet):
+    """Reviews.Category model ViewSet."""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     filter_backends = [filters.SearchFilter]
@@ -90,6 +102,7 @@ class CategoryViewSet(DestroyListCreateViewSet):
 
 
 class GenreViewSet(DestroyListCreateViewSet):
+    """Reviews.Genre model ViewSet."""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     filter_backends = [filters.SearchFilter]
@@ -103,6 +116,7 @@ class GenreViewSet(DestroyListCreateViewSet):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_new_user(request):
+    """A view function for a new user creation."""
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     username = request.data["username"]
@@ -122,6 +136,7 @@ def create_new_user(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def create_access_token(request):
+    """A view function for a access token creation."""
     serializer = TokenCreateSerializer(data=request.data)
     username = request.data.get("username")
     serializer.is_valid(raise_exception=True)
@@ -131,6 +146,7 @@ def create_access_token(request):
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
+    """Reviews.User model ViewSet."""
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = "username"
@@ -144,6 +160,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         serializer_class=UserMeSerializer,
     )
     def me(self, request):
+        """An action for interactions with an own user's account data."""
         user_me = User.objects.get(username=self.request.user.username)
         if request.method == "GET":
             serializer = self.get_serializer(user_me)

@@ -1,3 +1,6 @@
+"""A management commands for fulfilling database."""
+
+
 import csv
 
 from django.core.management.base import BaseCommand
@@ -6,6 +9,7 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class Command(BaseCommand):
+    """Command definition."""
 
     MODEL_TABLE = {
         Category: r"static/data/category.csv",
@@ -25,6 +29,7 @@ class Command(BaseCommand):
     USER_DICT = {"moderator": "is_staff", "admin": "is_superuser"}
 
     def handle(self, *args, **kwargs):
+        """A method for fulfilling database with titles and genres."""
         for model, table in self.MODEL_TABLE.items():
             with open(table, "r", encoding="utf8") as csv_file:
                 reader = csv.DictReader(csv_file)

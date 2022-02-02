@@ -1,7 +1,7 @@
 ![example workflow](https://github.com/dmitriipugachev/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
 ### Description:
-API for YaMDb with a CI/CD pipeline.
+[This one API for YaMDb](https://github.com/DmitriiPugachev/api_yamdb) with a CI/CD pipeline and Docker infrastructure.
 #### You can:
   * run the full project in docker containers;
   * create new users;
@@ -112,11 +112,8 @@ sudo
 ```
 
 ### Links
-[redoc](http://localhost/redoc/) this link is for local usage
+[redoc and all possible requests examples](http://localhost/redoc/) this link is for local usage
 
-[admin](http://localhost/admin/)  this link is for local usage
-
-[API](http://localhost/)  this link is for local usage
-
+[admin account](http://localhost/admin/)  this link is for local usage
 ### Author
 Dmitrii Pugachev

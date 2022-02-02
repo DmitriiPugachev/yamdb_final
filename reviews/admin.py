@@ -1,9 +1,13 @@
+"""Reviews admin config."""
+
+
 from django.contrib import admin
 
 from .models import Category, Comment, Genre, Review, Title
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    """Category model admin config."""
     list_display = (
         "name",
         "slug",
@@ -15,6 +19,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class GenreAdmin(admin.ModelAdmin):
+    """Genre model admin config."""
     list_display = (
         "name",
         "slug",
@@ -26,6 +31,7 @@ class GenreAdmin(admin.ModelAdmin):
 
 
 class TitleAdmin(admin.ModelAdmin):
+    """Title model admin config."""
     list_display = [
         "name",
         "year",
@@ -38,10 +44,12 @@ class TitleAdmin(admin.ModelAdmin):
     empty_value_display = "-пусто-"
 
     def show_genres(self, obj):
+        """Method returns all the genres names."""
         return "\n".join([genre_item.name for genre_item in obj.genre.all()])
 
 
 class ReviewAdmin(admin.ModelAdmin):
+    """Review model admin config."""
     list_display = (
         "text",
         "author",
@@ -53,6 +61,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
+    """Comment model admin config."""
     list_display = (
         "text",
         "author",

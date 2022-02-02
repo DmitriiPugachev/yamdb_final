@@ -1,3 +1,6 @@
+"""Reviews models description."""
+
+
 import datetime as dt
 
 from django.contrib.auth.models import AbstractUser
@@ -6,6 +9,7 @@ from django.db import models
 
 
 class UserRoles:
+    """Constant user roles."""
     USER = "user"
     MODERATOR = "moderator"
     ADMIN = "admin"
@@ -17,6 +21,7 @@ class UserRoles:
 
 
 class User(AbstractUser):
+    """Custom User model description."""
     role = models.CharField(
         max_length=150,
         choices=UserRoles.USER_ROLE_CHOICES,
@@ -35,10 +40,12 @@ class User(AbstractUser):
     )
 
     def __str__(self):
+        """A string view for a username field."""
         return self.username
 
 
 class Category(models.Model):
+    """Category model description."""
     name = models.CharField(
         max_length=200,
         help_text="Укажите название категории",
@@ -55,10 +62,12 @@ class Category(models.Model):
         verbose_name_plural = "Категория"
 
     def __str__(self):
+        """A string view for a name field."""
         return self.name
 
 
 class Genre(models.Model):
+    """Genre model description."""
     name = models.CharField(
         max_length=200,
         help_text="Укажите жанр",
@@ -77,10 +86,12 @@ class Genre(models.Model):
         verbose_name_plural = "Жанр"
 
     def __str__(self):
+        """A string view for a name field."""
         return self.name
 
 
 class Title(models.Model):
+    """Title model description."""
     name = models.CharField(
         max_length=200,
         verbose_name="Название произведения",
@@ -119,10 +130,12 @@ class Title(models.Model):
         verbose_name_plural = "Название"
 
     def __str__(self):
+        """A string view for a name field."""
         return self.name[:15]
 
 
 class Review(models.Model):
+    """Review model description."""
     text = models.CharField(
         max_length=200,
         verbose_name="Текст отзыва",
@@ -159,10 +172,12 @@ class Review(models.Model):
         verbose_name_plural = "Отзывы"
 
     def __str__(self):
+        """A string view for a text field."""
         return self.text[:15]
 
 
 class Comment(models.Model):
+    """Comment model description."""
     text = models.TextField(verbose_name="Текст комментария")
     author = models.ForeignKey(
         User,
@@ -186,4 +201,5 @@ class Comment(models.Model):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
+        """A string view for a text field."""
         return self.text[:15]

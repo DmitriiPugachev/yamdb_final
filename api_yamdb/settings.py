@@ -1,3 +1,6 @@
+"""Django settings for YaMDb project."""
+
+
 import os
 from datetime import timedelta
 
